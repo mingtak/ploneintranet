@@ -3,12 +3,10 @@
 Tests for ploneintranet.workspace forms
 """
 
-from Products.CMFPlone.interfaces.controlpanel import IMailSchema
 from Products.MailHost.interfaces import IMailHost
 from collective.workspace.interfaces import IWorkspace
 from email import message_from_string
 from plone import api
-from plone.registry.interfaces import IRegistry
 from plone.testing.z2 import Browser
 from ploneintranet.invitations.events import TokenAccepted
 from ploneintranet.workspace.browser.forms import InviteForm
@@ -18,7 +16,6 @@ from ploneintranet.workspace.testing import \
 from ploneintranet.workspace.tests.base import BaseTestCase
 from z3c.form.interfaces import IFormLayer
 from zope.annotation.interfaces import IAttributeAnnotatable
-from zope.component import getUtility
 from zope.component import provideAdapter
 from zope.event import notify
 from zope.interface import Interface
@@ -317,10 +314,10 @@ class TestInvitationFormEmailing(BaseTestCase):
         sm.registerUtility(component=mockmailhost, provided=IMailHost)
 
         self.mailhost = api.portal.get_tool('MailHost')
-        registry = getUtility(IRegistry)
-        self.mail_settings = registry.forInterface(IMailSchema, prefix="plone")
-        self.mail_settings.email_from_name = u'Portal Owner'
-        self.mail_settings.email_from_address = 'sender@example.org'
+        api.portal.set_registry_record(
+            'plone.email_from_name', u'Portal Owner')
+        api.portal.set_registry_record(
+            'plone.email_from_address', 'sender@example.org')
 
     def make_request(self, username, message=''):
         """
