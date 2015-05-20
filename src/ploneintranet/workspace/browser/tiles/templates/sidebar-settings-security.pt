@@ -14,6 +14,7 @@
             <h3>Workspace policy</h3>
 
             <tal:workspace_security tal:condition="ws/is_case">
+              <a href="${ws/absolute_url}/@@sharing#content" class="pat-modal">Sharing settings</a>
               <p>This is the security settings page for a case. Therefore you cannot ..., but you are able to assign roles.</p>
             </tal:workspace_security>
 

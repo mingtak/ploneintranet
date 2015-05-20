@@ -1,3 +1,4 @@
+<div id="content">
 <tal:block tal:condition="view/visible">
   <dl class="portalMessage warning"
       i18n:domain="ploneintranet">
@@ -9,3 +10,4 @@
     </dd>
   </dl>
 </tal:block>
+</div>
