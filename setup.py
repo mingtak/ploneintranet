@@ -64,6 +64,7 @@ setup(name='ploneintranet',
           'collective.celery',
           'collective.workspace',
           'fake-factory',
+          'slc.mailrouter>=1.10.7',
       ],
       extras_require={
           'test': [

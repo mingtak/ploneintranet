@@ -6,5 +6,6 @@
     <dependency>profile-ploneintranet.microblog:default</dependency>
     <dependency>profile-ploneintranet.activitystream:default</dependency>
     <dependency>profile-ploneintranet.network:default</dependency>
+    <dependency>profile-slc.mailrouter:default</dependency>
   </dependencies>
 </metadata>

@@ -1,8 +1,11 @@
 # coding=utf-8
+import unittest2 as unittest
 from ploneintranet.workspace.tests.base import BaseTestCase
 from plone import api
 from plone.api.exc import InvalidParameterError
+from slc.mailrouter.interfaces import IFriendlyNameStorage
 from collective.workspace.interfaces import IHasWorkspace, IWorkspace
+from zope.component import queryUtility
 
 
 class TestContentTypes(BaseTestCase):
@@ -198,3 +201,24 @@ class TestContentTypes(BaseTestCase):
 
         self.assertEqual(ws.calendar_visible, True)
         self.assertEqual(ws.email, 'test@testing.net')
+
+    @unittest.skip("not implemented")
+    def test_mailroute(self):
+        """
+        Check that setting email also sets a mail route
+        """
+        self.login_as_portal_owner()
+        wsc = getattr(self.portal, 'workspaces')
+        ws = api.content.create(
+            wsc,
+            'ploneintranet.workspace.workspacefolder',
+            'workspace-1',
+            title='Workspace 1'
+        )
+        ws.email = 'test@testing.net'
+
+        storage = queryUtility(IFriendlyNameStorage)
+        uid = storage.get('test', None)
+        self.assertEqual(
+            api.content.get(UID=uid),
+            ws)

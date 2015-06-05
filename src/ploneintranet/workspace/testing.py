@@ -15,6 +15,7 @@ import ploneintranet.activitystream
 import ploneintranet.invitations
 import Products.CMFPlacefulWorkflow
 import ploneintranet.theme
+import slc.mailrouter
 
 
 class PloneintranetworkspaceLayer(PloneSandboxLayer):
@@ -73,6 +74,12 @@ class PloneintranetworkspaceLayer(PloneSandboxLayer):
             context=configurationContext
         )
 
+        xmlconfig.file(
+            'configure.zcml',
+            slc.mailrouter,
+            context=configurationContext
+        )
+
         # Install products that use an old-style initialize() function
         z2.installProduct(app, 'collective.workspace')
         z2.installProduct(app, 'Products.CMFPlacefulWorkflow')
@@ -85,6 +92,7 @@ class PloneintranetworkspaceLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ploneintranet.workspace:default')
         applyProfile(portal, 'ploneintranet.theme:default')
+        self.applyProfile(portal, 'slc.mailrouter:default')
 
 PLONEINTRANET_WORKSPACE_FIXTURE = PloneintranetworkspaceLayer()
 
