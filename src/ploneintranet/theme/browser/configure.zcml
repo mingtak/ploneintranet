@@ -56,6 +56,15 @@
       />
 
   <browser:page
+      name="apps.html"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      class=".apps.Apps"
+      permission="ploneintranet.viewsite"
+      template="templates/apps.pt"
+      layer="..interfaces.IThemeSpecific"
+      />
+
+  <browser:page
       name="workspaces.html"
       for="plone.app.layout.navigation.interfaces.INavigationRoot"
       class=".workspace.Workspaces"
