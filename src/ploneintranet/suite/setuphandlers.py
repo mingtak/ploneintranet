@@ -143,18 +143,62 @@ def create_as(userid, *args, **kwargs):
     return obj
 
 
+def create_apps_items(appscontent):
+    portal = api.portal.get()
+    like_tool = getUtility(INetworkTool)
+
+    if 'apps' not in portal:
+        apps_folder = api.content.create(
+            type='Folder',
+            title='Apps',
+            container=portal
+        )
+    else:
+        apps_folder = portal['apps']
+    for appsitem in appscontent:
+        # give the users rights to add apps
+        api.user.grant_roles(
+            username=appsitem['creator'],
+            roles=['Contributor', 'Reader', 'Editor'],
+            obj=apps_folder
+        )
+        # give the users rights to add apps
+        obj = create_as(
+            userid=appsitem['creator'],
+            type='Folder',
+            title=appsitem['title'],
+            description=appsitem['description'],
+            container=apps_folder
+        )
+        obj.setSubject(tuple(appsitem['tags']))
+
+        obj.setEffectiveDate(appsitem['publication_date'])
+        obj.reindexObject(idxs=['effective', 'Subject', ])
+        if 'likes' in appsitem:
+            for user_id in appsitem['likes']:
+                like_tool.like("content", item_id=IUUID(obj), user_id=user_id)
+
+
 def create_news_items(newscontent):
     portal = api.portal.get()
     like_tool = getUtility(INetworkTool)
 
-    if 'news' not in portal:
-        news_folder = api.content.create(
+    if 'apps' not in portal:
+        apps_folder = api.content.create(
             type='Folder',
-            title='News',
+            title='Apps',
             container=portal
         )
     else:
-        news_folder = portal['news']
+        apps_folder = portal['apps']
+    if 'news' not in apps_folder:
+        news_folder = api.content.create(
+            type='NewsApp',
+            title='News',
+            container=apps_folder
+        )
+    else:
+        news_folder = apps_folder['news']
 
     for newsitem in newscontent:
         # give the users rights to add news
@@ -380,6 +424,16 @@ def testing(context):
                         DateTime('03/03/2021'),
                         DateTime('11/11/2023'), ]
 
+    apps_content = [
+        {'title': 'News',
+         'description': 'In this section you will create all the news',
+         'tags': [],
+         'publication_date': publication_date[0],
+         'creator': 'christian_stoney'},
+
+    ]
+
+    create_apps_items(apps_content)
     # make newsitems
     news_content = [
         {'title': 'Second Indian Airline to join Global Airline Alliance',
