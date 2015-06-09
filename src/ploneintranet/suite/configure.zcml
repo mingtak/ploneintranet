@@ -29,6 +29,7 @@
   <include package="ploneintranet.theme"/>
   <include package="ploneintranet.todo"/>
   <include package="ploneintranet.workspace"/>
+  <include package="ploneintranet.news"/>
 
   <genericsetup:registerProfile
       name="default"
