@@ -430,10 +430,29 @@ def testing(context):
          'tags': [],
          'publication_date': publication_date[0],
          'creator': 'christian_stoney'},
-
     ]
 
     create_apps_items(apps_content)
+
+    # news_section = [
+    #     {'title': 'Hot topics',
+    #      'description': '',
+    #      'tags': [],
+    #      'publication_date': publication_date[0],
+    #      'creator': 'christian_stoney'},
+    #     {'title': 'Company news',
+    #      'description': '',
+    #      'tags': [],
+    #      'publication_date': publication_date[0],
+    #      'creator': 'christian_stoney'},
+    #     {'title': 'Press releases',
+    #      'description': '',
+    #      'tags': [],
+    #      'publication_date': publication_date[0],
+    #      'creator': 'christian_stoney'},
+    # ]
+    #
+    # create_news_sections(news_sections)
     # make newsitems
     news_content = [
         {'title': 'Second Indian Airline to join Global Airline Alliance',
