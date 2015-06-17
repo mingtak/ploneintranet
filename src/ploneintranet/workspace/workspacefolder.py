@@ -80,14 +80,14 @@ class WorkspaceFolder(Container):
         self._participant_policy = new_policy
         notify(ParticipationPolicyChangedEvent(self, old_policy, new_policy))
 
-    #@property
-    #def email(self):
-    #    return ''
+    # @property
+    # def email(self):
+    #     return ''
 
-    #@email.setter
-    #def email(self, value):
-    #    return
+    # @email.setter
+    # def email(self, value):
+    #     return
 
-    #@email.deleter
-    #def email(self):
-    #    return
+    # @email.deleter
+    # def email(self):
+    #     return
