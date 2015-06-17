@@ -93,6 +93,7 @@ class PloneintranetworkspaceLayer(PloneSandboxLayer):
         applyProfile(portal, 'ploneintranet.workspace:default')
         applyProfile(portal, 'ploneintranet.theme:default')
         self.applyProfile(portal, 'slc.mailrouter:default')
+        applyProfile(portal, 'collective.externaleditor:default')
 
 PLONEINTRANET_WORKSPACE_FIXTURE = PloneintranetworkspaceLayer()
 
