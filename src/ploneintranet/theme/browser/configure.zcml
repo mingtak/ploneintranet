@@ -57,6 +57,14 @@
       />
 
   <browser:page
+      name="dashboard.html"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      permission="ploneintranet.viewsite"
+      template="templates/unthemed.pt"
+      layer="ploneintranet.themeswitcher.interfaces.IThemeSwitcher"
+      />
+
+  <browser:page
       name="workspaces.html"
       for="plone.app.layout.navigation.interfaces.INavigationRoot"
       class=".workspace.Workspaces"
@@ -72,6 +80,14 @@
       permission="ploneintranet.viewsite"
       template="templates/workspaces.pt"
       layer="..interfaces.IThemeSpecific"
+      />
+
+  <browser:page
+      name="workspaces.html"
+      for="ploneintranet.workspace.workspacecontainer.IWorkspaceContainer"
+      permission="ploneintranet.viewsite"
+      template="templates/unthemed.pt"
+      layer="ploneintranet.themeswitcher.interfaces.IThemeSwitcher"
       />
 
   <browser:page
