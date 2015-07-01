@@ -12,6 +12,8 @@ all:: fetchrelease
 default: all
 clean:
 	rm bin/* .installed.cfg || true
+clean-proto:
+	cd prototype && make clean
 check-clean:
 	test -z "$(shell git status --porcelain)" || (git status && echo && echo "Workdir not clean." && false) && echo "Workdir clean."
 
@@ -76,7 +78,7 @@ _diazo:
 	@[ -d $(DIAZO_DIR)/media/ ] || mkdir $(DIAZO_DIR)/media/
 	cp $(RELEASE_DIR)/media/logo*.svg $(DIAZO_DIR)/media/
 
-jsdev: dev-bundle diazo _jsdev ## full js development refresh
+jsdev: clean-proto dev-bundle diazo _jsdev ## full js development refresh
 
 # fast replace ploneintranet-dev.js - requires diazo to have run!
 _jsdev:
@@ -111,9 +113,11 @@ docker-run:
                 -v $(HOME)/.buildout:/.buildout \
                 -v /var/tmp:/var/tmp \
                 -v $(HOME)/.bashrc:/.bashrc \
+                -v $(HOME)/.pypirc:/.pypirc \
                 -v $(HOME)/.gitconfig:/.gitconfig \
                 -v $(HOME)/.gitignore:/.gitignore \
                 -e SSH_AUTH_SOCK=/tmp/auth.sock \
+		-e PYTHON_EGG_CACHE=/var/tmp/python-eggs \
 		-e LC_ALL=en_US.UTF-8 \
 		-e LANG=en_US.UTF-8 \
                 -v $(PWD):/app -w /app -u app $(PROJECT)
@@ -134,6 +138,14 @@ bin/buildout: bin/python2.7
 bin/python2.7:
 	@virtualenv --clear -p python2.7 .
 
+####################################################################
+# Solr
+
+solr: bin/buildout
+	@bin/buildout -c solr.cfg
+
+solr-clean:
+	rm -rf parts/solr parts/solr-test
 
 ####################################################################
 # Testing
@@ -141,6 +153,7 @@ bin/python2.7:
 # inspect robot traceback:
 # bin/robot-server ploneintranet.suite.testing.PLONEINTRANET_SUITE_ROBOT
 # firefox localhost:55001/plone
+# To see the tests going on, use DISPLAY=:0, or use Xephyr -screen 1024x768 instead of Xvfb
 test-robot: ## Run robot tests with a virtual X server
 	Xvfb :99 1>/dev/null 2>&1 & HOME=/app DISPLAY=:99 bin/test -t 'robot' -x
 	@ps | grep Xvfb | grep -v grep | awk '{print $2}' | xargs kill 2>/dev/null
@@ -152,4 +165,17 @@ test:: ## Run all tests, including robot tests with a virtual X server
 	Xvfb :99 1>/dev/null 2>&1 & HOME=/app DISPLAY=:99 bin/test -x
 	@ps | grep Xvfb | grep -v grep | awk '{print $2}' | xargs kill 2>/dev/null
 
-.PHONY: all clean check-clean
+####################################################################
+# Documentation
+docs:
+	@bin/sphinx-build -b html -d docs/doctrees -D latex_paper_size=a4 docs docs/html
+
+# Re-generate
+api-docs:
+	@bin/sphinx-apidoc -P -o docs/api src/ploneintranet
+
+docs-clean:
+	rm -rf docs/html
+
+.PHONY: all docs api-docs docs-clean clean check-clean solr-clean
+

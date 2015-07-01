@@ -13,22 +13,26 @@ long_description = (
 
 setup(name='ploneintranet',
       version=version,
-      description="Intranet suite for Plone",
+      description='Intranet suite for Plone',
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-          "Environment :: Web Environment",
-          "Framework :: Plone",
-          "Operating System :: OS Independent",
-          "Programming Language :: Python",
-          "Programming Language :: Python :: 2.7",
-          "Topic :: Software Development :: Libraries :: Python Modules",
-          "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+          'Environment :: Web Environment',
+          'Framework :: Plone',
+          'Framework :: Plone :: 5.0',
+          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2.7',
+          'Topic :: Office/Business',
+          'Topic :: Office/Business :: Groupware',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
       ],
-      keywords='',
-      author='',
-      author_email='',
+      keywords='intranet social activitystream collaboration groupware',
+      author='Plone Intranet Consortium',
+      author_email='info@ploneintranet.org',
       url='https://github.com/ploneintranet/ploneintranet',
       license='gpl',
       packages=find_packages('src'),
@@ -48,11 +52,13 @@ setup(name='ploneintranet',
           'plone.app.tiles',
           'plone.app.async',
           'plone.app.blocks',
+          'plone.app.theming',
           'BeautifulSoup',
           'mincemeat',
           'networkx',
           'rwproperty',
           'collective.z3cform.chosen',
+          'dexterity.membrane',
           'Plone',
           'plone.api',
           'Products.UserAndGroupSelectionWidget',
@@ -62,6 +68,8 @@ setup(name='ploneintranet',
           'collective.celery',
           'collective.workspace',
           'fake-factory',
+          'collective.externaleditor >= 1.0.2',
+          'collective.dexteritytextindexer',
       ],
       extras_require={
           'test': [
@@ -94,6 +102,9 @@ setup(name='ploneintranet',
               'plone.tiles',
               'plone.app.blocks',
           ],
+          'themeswitcher': [
+              'plone.app.theming',
+          ],
           'todo': [
               'rwproperty',
               'plone.directives.dexterity',
@@ -104,10 +115,6 @@ setup(name='ploneintranet',
               'plone.async',
               'BeautifulSoup',
           ],
-          'simplesharing': [
-              'collective.z3cform.chosen',
-              'plone.directives.form',
-          ],
           'pagerank': [
               'networkx',
               'mincemeat',
@@ -116,10 +123,25 @@ setup(name='ploneintranet',
               'Products.UserAndGroupSelectionWidget'
           ],
           'develop': ['plone.reload', 'iw.debug'],
+          'release': [
+              'zest.releaser',
+              'check-manifest',
+              'pyroma',
+              'zest.pocompile',
+              'gocept.zestreleaser.customupload',
+              'twine',
+          ],
+          'solr': [
+              'collective.indexing >= 2.0a2',
+              'requests',
+              'scorched',
+          ]
       },
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
       target = plone
-      """,
-      )
+
+      [zest.releaser.releaser.after_checkout]
+      add_files_to_release = ploneintranet.core.release:add_files_to_release
+      """)

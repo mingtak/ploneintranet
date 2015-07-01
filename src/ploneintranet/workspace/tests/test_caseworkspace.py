@@ -1,26 +1,7 @@
-from Products.Five.utilities.marker import mark
-from Testing.ZopeTestCase import utils
 from plone import api
-from ploneintranet.workspace.case import ICase
 from ploneintranet.workspace.interfaces import IMetroMap
 from ploneintranet.workspace.tests.base import FunctionalBaseTestCase
 from zope.component import queryAdapter
-
-import transaction
-
-
-def startZServerSSH(local_port, user_at_hostname):
-    """ startZServerSSH(9999, "star@eithniu")
-    starts the ZServer and prints:
-    ssh -L 9999:localhost:55017 star@eithniu
-    (which you run from a terminal)
-    """
-    transaction.commit()
-    host, port = utils.startZServer()
-    print "\n\nssh -L %s:localhost:%s %s\n\n" % (
-        local_port, port, user_at_hostname)
-    import pdb
-    pdb.set_trace()
 
 
 class TestCaseWorkspace(FunctionalBaseTestCase):
@@ -29,18 +10,19 @@ class TestCaseWorkspace(FunctionalBaseTestCase):
 
     def setUp(self):
         self.portal = self.layer["portal"]
-        self.case = api.content.create(
-            type="ploneintranet.workspace.workspacefolder",
-            title="case1",
+        pwft = api.portal.get_tool("portal_placeful_workflow")
+        workspaces = api.content.create(
+            type="ploneintranet.workspace.workspacecontainer",
+            title="Workspaces",
             container=self.portal,
         )
-        # Turn a Workspace into a Case
-        mark(self.case, ICase)
-
-        # Use the Case workflow for it using CMFPlacefulWorkflow
-        pwft = api.portal.get_tool("portal_placeful_workflow")
+        self.case = api.content.create(
+            type="ploneintranet.workspace.case",
+            title="case1",
+            container=workspaces,
+        )
         wfconfig = pwft.getWorkflowPolicyConfig(self.case)
-        wfconfig.setPolicyIn("case_workflow")
+        wfconfig.setPolicyIn('case_workflow')
 
     def test_metromap_initial_state(self):
         """A newly created Case is in the first workflow state. It can't be

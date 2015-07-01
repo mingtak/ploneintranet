@@ -4,6 +4,7 @@ from plone.memoize.view import memoize
 from plone.tiles import Tile
 from plone import api
 from ploneintranet.microblog.interfaces import IMicroblogTool
+from ploneintranet.core import ploneintranetCoreMessageFactory as _
 from zope.component import queryUtility
 
 
@@ -30,7 +31,8 @@ def my_workspaces(context):
     """
     pc = api.portal.get_tool('portal_catalog')
     brains = pc(
-        object_provides='ploneintranet.workspace.workspacefolder.IWorkspaceFolder',
+        object_provides=(
+            'ploneintranet.workspace.workspacefolder.IWorkspaceFolder'),
         sort_on="modified",
         sort_order="reversed",
     )
@@ -69,7 +71,7 @@ def get_workspace_activities(brain, limit=1):
         creator = user_data.get('fullname') if user_data else item.creator
         results.append(dict(
             subject=creator,
-            verb='posted',
+            verb=_(u'posted'),
             object=item.text,
             time={
                 'datetime': item.date.strftime('%Y-%m-%d'),

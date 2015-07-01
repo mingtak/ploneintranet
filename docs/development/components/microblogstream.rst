@@ -14,7 +14,7 @@ Microblog and Activity Stream
 Introduction
 ------------
 
-This stack of functionality used to be split into various packages (plonesocial.*). After the unification, the packages are nowpart of ploneintranet, but still under their original folder names (e.g. `ploneintranet.microblog <https://github.com/ploneintranet/ploneintranet/tree/master/src/ploneintranet/microblog>`_, which used to be plonesocial.microblog).
+This stack of functionality used to be split into various packages (plonesocial.*). After the unification, the packages are now part of ploneintranet, but still under their original folder names (e.g. `ploneintranet.microblog <https://github.com/ploneintranet/ploneintranet/tree/master/src/ploneintranet/microblog>`_, which used to be plonesocial.microblog).
 
 Packages
 ========
@@ -262,4 +262,13 @@ For every activity reply provider on a post, the macro "comment.html" is called.
 * Section "comment-header" with avatar (macro "avatar.html") and byline
 * Section "comment-content" with the actual content; the ``getText`` method of the activity provider assembles text, mentions and tags
 * Section "preview", for attachment previews
+
+
+Microblogging API
+=================
+
+.. automodule:: ploneintranet.api.microblog.statusupdate
+    :members:
+    :undoc-members:
+    :show-inheritance:
 

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from AccessControl import Unauthorized
 from DateTime import DateTime
+from collective.workspace.interfaces import IWorkspace
 from plone import api
 from plone.app.contenttypes.interfaces import IEvent
 from plone.i18n.normalizer import idnormalizer
@@ -21,7 +22,6 @@ from ...policies import PARTICIPANT_POLICY
 from ...utils import parent_workspace
 from ...utils import map_content_type
 from ...utils import set_cookie
-from ploneintranet.todo.behaviors import ITodo
 
 import logging
 
@@ -64,7 +64,16 @@ class BaseTile(BrowserView):
         """
         return api.user.has_permission(
             "ploneintranet.workspace: Manage workspace",
-            obj=self,
+            obj=self.context,
+        )
+
+    def can_add(self):
+        """
+        Is this user allowed to add content?
+        """
+        return api.user.has_permission(
+            "Add portal content",
+            obj=self.context,
         )
 
 
@@ -101,6 +110,24 @@ class SidebarSettingsMembers(BaseTile):
     def existing_users(self):
         return self.workspace().existing_users()
 
+    def __call__(self):
+        form = self.request.form
+        ws = self.workspace()
+        user_id = form.get('user_id')
+        if user_id:
+            if not self.can_manage_workspace():
+                msg = _(u'You do not have permission to change the workspace '
+                        u'policy')
+                raise Unauthorized(msg)
+            else:
+                IWorkspace(ws).add_to_team(user=user_id)
+                api.portal.show_message(
+                    _(u'Member added'),
+                    self.request,
+                    'success',
+                )
+        return self.render()
+
 
 class SidebarSettingsSecurity(BaseTile):
     """
@@ -108,6 +135,12 @@ class SidebarSettingsSecurity(BaseTile):
     """
 
     index = ViewPageTemplateFile('templates/sidebar-settings-security.pt')
+
+    join_policy_label = _(u'join_policy_label', default=u'Join policy')
+    external_visibility_label = _(u'external_visibility_label',
+                                  default=u'External visibility')
+    participant_policy_label = _(u'participant_policy_label',
+                                 default=u'Participant policy')
 
     def __init__(self, context, request):
         """
@@ -190,6 +223,8 @@ class Sidebar(BaseTile):
     """
 
     index = ViewPageTemplateFile('templates/sidebar.pt')
+    drop_files_label = _(u"drop_files_here",
+                         default=u"Drop files here or click to browse...")
     section = "documents"
 
     def __call__(self):
@@ -201,11 +236,14 @@ class Sidebar(BaseTile):
         if self.request.method == 'POST' and form:
             ws = self.workspace()
             self.set_grouping_cookie()
-            if not self.can_manage_workspace():
+            wft = api.portal.get_tool("portal_workflow")
+            section = self.request.form.get('section', None)
+            do_reindex = False
+            if section != 'task' and not self.can_manage_workspace():
                 msg = _(u'You do not have permission to change the workspace '
                         u'title or description')
                 raise Unauthorized(msg)
-            if self.request.form.get('section', None) == 'task':
+            elif section == 'task':
                 current_tasks = self.request.form.get('current-tasks', [])
                 active_tasks = self.request.form.get('active-tasks', [])
 
@@ -214,27 +252,35 @@ class Sidebar(BaseTile):
                                       'operator': 'or'})
                 for brain in brains:
                     obj = brain.getObject()
-                    todo = ITodo(obj)
+                    state = wft.getInfoFor(obj, 'review_state')
                     if brain.UID in active_tasks:
-                        todo.status = u'done'
+                        if state in ["open", "planned"]:
+                            api.content.transition(obj, "finish")
                     else:
-                        todo.status = u'tbd'
-                api.portal.show_message(_(u'Changes applied'),
-                                        self.request,
-                                        'success')
+                        if state == "done":
+                            obj.reopen()
+                api.portal.show_message(
+                    _(u'Changes applied'), self.request, 'success')
+                msg = ViewPageTemplateFile(
+                    '../templates/globalstatusmessage.pt')
+                return msg(self)
             else:
-                if form.get('title') and form.get('title') != ws.title:
-                    ws.title = form.get('title').strip()
-                    api.portal.show_message(_(u'Title changed'),
-                                            self.request,
-                                            'success')
-
-                if form.get('description') and \
-                   form.get('description') != ws.description:
-                    ws.description = form.get('description').strip()
-                    api.portal.show_message(_(u'Description changed'),
-                                            self.request,
-                                            'success')
+                if form.get('title'):
+                    title = safe_unicode(form.get('title')).strip()
+                    if title != ws.title:
+                        ws.title = title.strip()
+                        do_reindex = True
+                        api.portal.show_message(_(u'Title changed'),
+                                                self.request,
+                                                'success')
+                if form.get('description'):
+                    description = safe_unicode(form.get('description')).strip()
+                    if ws.description != description:
+                        ws.description = description
+                        do_reindex = True
+                        api.portal.show_message(_(u'Description changed'),
+                                                self.request,
+                                                'success')
 
                 calendar_visible = not not form.get('calendar_visible')
                 if calendar_visible != ws.calendar_visible:
@@ -242,7 +288,8 @@ class Sidebar(BaseTile):
                     api.portal.show_message(_(u'Calendar visibility changed'),
                                             self.request,
                                             'success')
-
+            if do_reindex:
+                ws.reindexObject()
         return self.render()
 
     def logical_parent(self):
@@ -305,9 +352,10 @@ class Sidebar(BaseTile):
                 # What exactly do we need to inject, and where?
                 dpi = (
                     "source: #workspace-documents; "
-                    "target: #workspace-documents; "
-                    "url: %s/@@sidebar.default#workspace-documents" %
-                    url
+                    "target: #workspace-documents "
+                    "&& "
+                    "source: nav.breadcrumbs; "
+                    "target: nav.breadcrumbs; "
                 )
             else:
                 # Plone specific:
@@ -330,7 +378,10 @@ class Sidebar(BaseTile):
                 structural_type=structural_type,
                 content_type=content_type,
                 dpi=dpi,
-                url=url
+                url=url,
+                creator=api.user.get(username=r['Creator']),
+                modified=r['modified'],
+                subject=r['Subject']
             ))
         return results
 
@@ -402,10 +453,13 @@ class Sidebar(BaseTile):
                 else 'has-no-description'
             )
 
-            cls = 'item %s type-%s %s' % \
-                (item.get('structural_type', 'group'),
-                 item.get('content_type', 'code'),
-                 cls_desc)
+            ctype = item.get('content_type', 'code')
+            if ctype == '':
+                ctype = 'document'
+            else:
+                ctype = "type-{0}".format(ctype)
+            cls = 'item %s %s %s' % (
+                item.get('structural_type', 'group'), ctype, cls_desc)
 
             item['cls'] = cls
             item['mime-type'] = ''
@@ -776,28 +830,6 @@ class Sidebar(BaseTile):
         """
         return int(self.request.form.get('page_size', 18))
 
-    def tasks(self):
-        """
-        Show all tasks in the workspace
-        """
-        items = []
-        catalog = api.portal.get_tool('portal_catalog')
-        current_path = '/'.join(self.context.getPhysicalPath())
-        ptype = 'simpletodo'
-        brains = catalog(path=current_path, portal_type=ptype)
-        for brain in brains:
-            obj = brain.getObject()
-            todo = ITodo(obj)
-            data = {
-                'id': brain.UID,
-                'title': brain.Description,
-                'content': brain.Title,
-                'url': brain.getURL(),
-                'checked': todo.status == u'done'
-            }
-            items.append(data)
-        return items
-
     def events(self):
         """
         Return the events in this workspace
@@ -822,3 +854,6 @@ class Sidebar(BaseTile):
             end={'query': (now), 'range': 'max'},
         )
         return {'upcoming': upcoming_events, 'older': older_events}
+
+    def can_add(self):
+        return api.user.has_permission('Add portal content', obj=self.context)

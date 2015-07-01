@@ -11,9 +11,8 @@
 
 <metal:main fill-slot="prefs_configlet_content">
 
-  <div metal:use-macro="context/global_statusmessage/macros/portal_message"
-       i18n:translate="">
-    Portal status message
+  <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+    <!-- Portal status message -->
   </div>
 
   <div id="content">
@@ -28,8 +27,7 @@
     <p>
       <em i18n:translate="invitation_admin_para_2">When the unique token URL is
           accessed, a user account will be automatically created and the user
-          will be logged in. Subsequent uses of the URL will log the user in
-          automatically.
+          will be logged in. Finally the token URL will be invalidated.
       </em>
     </p>
             
@@ -51,6 +49,8 @@
                type="submit"
                name="send"
                value="Send"
+               i18n:translate="label_send"
+               i18n:attributes="value"
             />
       </p>
 

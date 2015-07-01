@@ -2,15 +2,20 @@
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone import api
+from plone.protect import PostOnly
 from plone.app.uuid.utils import uuidToCatalogBrain
 from ploneintranet.core.integration import PLONEINTRANET
-from ploneintranet.network import _
+from ploneintranet.core import ploneintranetCoreMessageFactory as _
 from ploneintranet.network.interfaces import INetworkTool
 from zope.component import getUtility
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
 
 import uuid
+
+
+class NotAllowed(Exception):
+    pass
 
 
 class ToggleLike(BrowserView):
@@ -46,9 +51,9 @@ class ToggleLike(BrowserView):
             self.handle_toggle()
 
         if self.is_liked:
-            self.verb = _(u'Unlike')
+            self.verb = self.context.translate(_(u'Unlike'))
         else:
-            self.verb = _(u'Like')
+            self.verb = self.context.translate(_(u'Like'))
         self.unique_id = uuid.uuid4().hex
         return self.index()
 
@@ -56,7 +61,12 @@ class ToggleLike(BrowserView):
         return "%s/@@toggle_like" % self.context.absolute_url()
 
     def handle_toggle(self):
-        """Perform the actual like/unlike action."""
+        """
+        Perform the actual like/unlike action.
+        Since this does a db write it cannot be called with a GET.
+        """
+        PostOnly(self.request)
+
         if not self.is_liked:
             self.util.like(self.like_type, self.item_id,
                            self.current_user_id)

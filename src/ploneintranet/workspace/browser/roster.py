@@ -9,6 +9,7 @@ from plone.protect import CheckAuthenticator, PostOnly
 from ploneintranet.workspace import MessageFactory as _
 from zope.component import getMultiAdapter
 from ploneintranet.workspace.browser.workspace import BaseWorkspaceView
+from ploneintranet.workspace.utils import existing_users
 
 
 class EditRoster(BaseWorkspaceView):
@@ -102,7 +103,7 @@ class EditRoster(BaseWorkspaceView):
         return users
 
     def existing_users(self):
-        return self.context.existing_users()
+        return existing_users(self.context)
 
     def can_manage_workspace(self):
         """
@@ -129,3 +130,9 @@ class EditRoster(BaseWorkspaceView):
         is this workspace admin managed?
         """
         return self.context.join_policy == 'admin'
+
+
+class WorkspaceMemberPicker(EditRoster):
+    """
+    A modal with a user picker to select new members
+    """

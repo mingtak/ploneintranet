@@ -1,5 +1,6 @@
 from collections import defaultdict
 from collective.workspace.interfaces import IWorkspace
+from json import dumps
 from plone import api
 from plone.dexterity.content import Container
 from plone.directives import form
@@ -8,6 +9,7 @@ from ploneintranet.attachments.attachments import IAttachmentStoragable
 from ploneintranet.todo.behaviors import ITodo
 from ploneintranet.workspace import MessageFactory
 from ploneintranet.workspace.events import ParticipationPolicyChangedEvent
+from ploneintranet import api as pi_api
 from zope import schema
 from zope.event import notify
 from zope.interface import implementer
@@ -60,6 +62,16 @@ class WorkspaceFolder(Container):
         return False
 
     @property
+    def ws_type(self):
+        """
+        returns a string for use in a css selector in the templates
+        describing this content type
+        Override in custom workspace types, if you want to make use of
+        it for custom styling
+        """
+        return "workspace"
+
+    @property
     def join_policy(self):
         try:
             return self._join_policy
@@ -90,9 +102,13 @@ class WorkspaceFolder(Container):
     def tasks(self):
         items = defaultdict(list) if self.is_case else []
         catalog = api.portal.get_tool('portal_catalog')
+        wft = api.portal.get_tool('portal_workflow')
         current_path = '/'.join(self.getPhysicalPath())
         ptype = 'todo'
-        brains = catalog(path=current_path, portal_type=ptype)
+        brains = catalog(
+            path=current_path,
+            portal_type=ptype,
+            sort_on='due')
         for brain in brains:
             obj = brain.getObject()
             todo = ITodo(obj)
@@ -101,8 +117,9 @@ class WorkspaceFolder(Container):
                 'title': brain.Title,
                 'description': brain.Description,
                 'url': brain.getURL(),
-                'checked': todo.status == u'done',
+                'checked': wft.getInfoFor(todo, 'review_state') == u'done',
                 'due': obj.due,
+                'assignee': obj.assignee,
             }
             if self.is_case:
                 milestone = "unassigned"
@@ -133,9 +150,7 @@ class WorkspaceFolder(Container):
             description = MessageFactory(u'Here we could have a nice status of'
                                          u' this person')
             classes = description and 'has-description' or 'has-no-description'
-            portal = api.portal.get()
-            portrait = '%s/portal_memberdata/portraits/%s' % \
-                       (portal.absolute_url(), userid)
+            portrait = pi_api.userprofile.avatar_url(userid)
             info.append(
                 dict(
                     id=userid,
@@ -149,6 +164,35 @@ class WorkspaceFolder(Container):
             )
 
         return info
+
+    def existing_users_by_id(self):
+        """
+        A dict version of existing_users userid for the keys, to simplify
+        looking up details for a user by id
+        """
+        users = self.existing_users()
+        users_by_id = {}
+        for user in users:
+            users_by_id[user['id']] = user
+        return users_by_id
+
+    def member_prefill(self, context, field, default=None):
+        """
+        Return JSON for pre-filling a pat-autosubmit field with the values for
+        that field
+        """
+        users = self.existing_users()
+        field_value = getattr(context, field, default)
+        prefill = {}
+        if field_value:
+            assigned_users = field_value.split(',')
+            for user in users:
+                if user['id'] in assigned_users:
+                    prefill[user['id']] = user['title']
+        if prefill:
+            return dumps(prefill)
+        else:
+            return ''
 
 
 class IWorkflowWorkspaceFolder(IWorkspaceFolder):
