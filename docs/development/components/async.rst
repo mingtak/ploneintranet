@@ -166,6 +166,13 @@ Final goal
 * Tornado server publishes "done" message to Jane's browser together with URL to fetch HTML snippet from
 * Browser receives an HTML snippet from the websocket marked up with `pat-push`_
 
+Status feed attachments
+^^^^^^^^^^^^^^^^^^^^^^^
+
+In addition to the above,
+adding attachments to a status message will be handled slightly differently.
+
+
 Technology stack
 ----------------
 
