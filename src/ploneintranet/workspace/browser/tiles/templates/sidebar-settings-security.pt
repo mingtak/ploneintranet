@@ -20,7 +20,7 @@
             <h3 i18n:translate="">Workspace policy</h3>
 
             <tal:workspace_security tal:condition="ws/is_case">
-              <a href="${ws/absolute_url}/@@sharing#content" class="pat-modal">Sharing settings</a>
+              <a href="${ws/absolute_url}/@@sharing#document-content" data-pat-modal="class: large" class="pat-modal">Sharing settings</a>
               <p i18n:translate="">For cases, security is managed by the case workflow. You cannot configure it here like in workspaces. Instead please just assign the correct roles to users and groups in the "Members" tab.</p>
             </tal:workspace_security>
 
@@ -74,6 +74,5 @@
         </div>
       </div>
     </div>
-
   </body>
 </html>
