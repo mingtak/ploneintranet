@@ -13,8 +13,66 @@ from ploneintranet.core.browser.utils import link_tags
 from ploneintranet.core.browser.utils import link_users
 from ploneintranet.docconv.client.interfaces import IDocconv
 from ploneintranet import api as pi_api
+from ttp.ttp import Parser
+from ttp.ttp import escape
 
 logger = logging.getLogger('ploneintranet.activitystream')
+
+
+class StatusUpdateParser(Parser):
+    ''' Use a status update parser based on
+    twitter-text-python package
+    '''
+    def __init__(
+        self,
+        navigation_root_url,
+        max_url_length=256,
+        include_spans=False
+    ):
+        ''' Override original class default parameters
+        add a navigation_root_url parameter
+        '''
+        self._include_spans = include_spans
+        self._navigation_root_url = navigation_root_url
+        self._max_url_length = max_url_length
+
+    def _parse_lists(self, match):
+        ''' Override this method because for the time being
+        '''
+        return
+
+    def format_tag(self, tag, text):
+        '''Return formatted HTML for a hashtag.'''
+        return (
+            '<a href="%(navigation_root_url)s/@@stream/tag/%(text)s">'
+            '%(tag)s%(text)s'
+            '</a>'
+        ) % {
+            'navigation_root_url': self._navigation_root_url,
+            'tag': tag,
+            'text': text,
+        }
+
+    def format_username(self, at_char, user):
+        '''Return formatted HTML for a username.'''
+        return (
+            '<a href="%(navigation_root_url)s/author/%(user)s">'
+            '%(at)s%(user)s'
+            '</a>'
+        ) % {
+            'at': at_char,
+            'navigation_root_url': self._navigation_root_url,
+            'user': user,
+        }
+
+    def format_list(self, at_char, user, list_name):
+        '''Return formatted HTML for a list.'''
+        return '<a href="https://twitter.com/%s/%s">%s%s/%s</a>' \
+               % (user, list_name, at_char, user, list_name)
+
+    def format_url(self, url, text):
+        '''Return formatted HTML for a url.'''
+        return '<a href="%s">%s</a>' % (escape(url), text)
 
 
 class StatusUpdateView(BrowserView):
@@ -127,12 +185,14 @@ class StatusUpdateView(BrowserView):
          - add mentions
          - add tags
         '''
+        parser = StatusUpdateParser(self.portal_url)
         text = safe_unicode(self.context.text).replace(u'\n', u'<br />')
+        html = parser.parse(text).html
         tags = getattr(self.context, 'tags', None)
         mentions = getattr(self.context, 'mentions', None)
-        text += link_users(self.portal_url, mentions)
-        text += link_tags(self.portal_url, tags)
-        return text
+        html += link_users(self.portal_url, mentions)
+        html += link_tags(self.portal_url, tags)
+        return html
 
     @memoize_contextless
     def get_avatar_by_userid(
