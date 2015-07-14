@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 from AccessControl import getSecurityManager
 from DateTime import DateTime
+from interfaces import IContentStatusUpdate
 from interfaces import IStatusUpdate
 from persistent import Persistent
 from plone import api
@@ -33,7 +34,8 @@ class StatusUpdate(Persistent):
         context=None,
         thread_id=None,
         mention_ids=None,
-        tags=None
+        tags=None,
+        content=None,
     ):
         self.__parent__ = self.__name__ = None
         self.id = long(time.time() * 1e6)  # modified by IStatusContainer
@@ -44,10 +46,13 @@ class StatusUpdate(Persistent):
         self._init_userid()
         self._init_creator()
         self._init_microblog_context(context)
+        self._init_content_context(content)
         self.tags = tags
 
         if thread_id:
             alsoProvides(self, IStatusActivityReply)
+        if content:
+            alsoProvides(self, IContentStatusUpdate)
 
     # for unittest subclassing
     def _init_userid(self):
@@ -73,6 +78,15 @@ class StatusUpdate(Persistent):
         else:
             # actual object context
             self.context_object = context
+
+    # for unittest subclassing
+    def _init_content_context(self, content):
+        ''' We store the uuid as a reference of a content
+        related to this status update
+
+        We may want to catch a TypeError here...
+        '''
+        self._content_context_uuid = self._context2uuid(content)
 
     def _init_mentions(self, mention_ids):
         self.mentions = {}
