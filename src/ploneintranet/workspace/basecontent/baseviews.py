@@ -28,6 +28,14 @@ class ContentView(BrowserView):
             'Modify portal content',
             obj=context
         )
+        self.can_add = api.user.has_permission(
+            'Add portal content',
+            obj=context
+        )
+        self.can_delete = api.user.has_permission(
+            'Delete objects',
+            obj=context
+        )
         # When saving, force to POST
         if self.request.method == 'POST':
             self.update()

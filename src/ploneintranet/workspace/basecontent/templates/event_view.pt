@@ -13,9 +13,9 @@
         tal:define="workspace python:view.workspace;
                     workspace_url python:workspace.absolute_url();
                     workspace_id python:workspace.id;
-                    read_only python:not view.can_edit">
-    <div id="content" 
-         tal:define="type workspace/ws_type | string:workspace;" 
+                    read_only python:not view.can_edit and 'disabled' or None">
+    <div id="content"
+         tal:define="type workspace/ws_type | string:workspace;"
          tal:attributes="class string:application page-type-${type} workspace-type-${type}">
 
         <h1 id="workspace-name">
@@ -36,12 +36,21 @@
                             <button class="pat-switch back-to-parent icon-left-open" data-pat-switch="body focus-* focus-sidebar">${python:context.__parent__.title}</button>
                             <input type="text" name="title" tal:attributes="disabled read_only" placeholder="Document title" class="doc-title pat-content-mirror" data-pat-content-mirror="target: #document-title" value="${context/title}" />
                             <div class="quick-functions">
-                                <a href="${context/absolute_url}/delete_confirmation#content" title="Delete this event" i18n:attributes="title" i18n:translate="" data-pat-inject="source: #content" class="pat-modal icon-trash iconified">
+                                <a tal:condition="view/can_delete" href="${context/absolute_url}/delete_confirmation#content" title="Delete this event" i18n:attributes="title" i18n:translate="" data-pat-inject="source: #content" class="pat-modal icon-trash iconified">
                                     Delete
                                 </a>
-                                <a href="/feedback/panel-event-attachments.html#content" class="icon-attach iconified pat-tooltip" data-pat-tooltip="source: ajax" title="Attach documents" i18n:attributes="title" i18n:translate="">
-                                    Attachments
-                                </a>
+                                <tal:comment condition="nothing">
+                                    Design is missing here!!! commenting until fixed
+                                    <a tal:condition="python:view/can_add"
+                                       href="/feedback/panel-event-attachments.html#content"
+                                       class="icon-attach iconified pat-tooltip"
+                                       data-pat-tooltip="source: ajax"
+                                       title="Attach documents"
+                                       i18n:attributes="title"
+                                       i18n:translate="">
+                                        Attachments
+                                    </a>
+                                </tal:comment>
                                 <a class="icon-info-circle meta-data-toggle iconified" title="Show extra metadata fields" i18n:attributes="title" i18n:translate="">Toggle extra metadata</a>
                                 <!-- <a href="" class="icon-copy iconified" title="Copy this document">
                                     Copy
@@ -72,7 +81,7 @@
                         <fieldset class="pat-collapsible closed meta-extra" data-pat-collapsible="trigger: .meta-data-toggle" id="meta-extra">
                             <!-- <fieldset class="bar">
                     <input type="text"
-                           name="subjects" placeholder="Tags" 
+                           name="subjects" placeholder="Tags"
                            value="${python:','.join(context.subject)}"
                            tal:attributes="disabled read_only"
                            class="pat-autosuggest"
