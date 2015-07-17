@@ -150,10 +150,10 @@
                     <tal:block content="context/Title" />
                     <tal:comment condition="nothing">
                       TODO: edit or rename comes later
-                    <a tal:attributes="href string:${context/absolute_url}/object_rename"
-                       class="icon-pencil iconified pat-modal"
-                       data-pat-modal="class: large"
-                       i18n:translate="">Edit name/description</a>
+                      <a tal:attributes="href string:${context/absolute_url}/object_rename"
+                         class="icon-pencil iconified pat-modal"
+                         data-pat-modal="class: large"
+                         i18n:translate="">Edit name/description</a>
                     </tal:comment>
                   </h4>
                   <p class="folder-description"
@@ -204,15 +204,15 @@ Supported types include (class names):
                       <dfn class="byline" tal:content="item/description" tal:condition="item/description">An interactive workshop to test new and innovative tools to trace people through time.</dfn>
                     </a>
                     <div class="additional-meta-data">
-                        <a href="/guido-stevens/" class="author meta-column" title="Author of this document" i18n:attributes="title" tal:define="creator item/creator | nothing" tal:condition="item/creator | nothing" tal:content="python:creator.getProperty('fullname')" tal:attributes="href string:${here/portal_url}/author/${creator/getId}">
-                            Creator
-                        </a>
-                        <time class="modification-date meta-column" tal:condition="item/modified | nothing" title="Date and time of the latest modification" i18n:attributes="title" tal:content="python:item['modified'].strftime('%d %B %Y, %H:%M')">
-                            {{ doc.date }}
-                        </time>
-                        <nav class="tag-cloud tags meta-column" tal:condition="item/subject | nothing">
-                            <a tal:repeat="subject item/subject" href="#" class="tag" tal:content="subject">Finanzplanung</a>
-                        </nav>
+                      <a href="/guido-stevens/" class="author meta-column" title="Author of this document" i18n:attributes="title" tal:define="creator item/creator | nothing" tal:condition="item/creator | nothing" tal:content="python:creator.getProperty('fullname')" tal:attributes="href string:${here/portal_url}/author/${creator/getId}">
+                        Creator
+                      </a>
+                      <time class="modification-date meta-column" tal:condition="item/modified | nothing" title="Date and time of the latest modification" i18n:attributes="title" tal:content="python:item['modified'].strftime('%d %B %Y, %H:%M')">
+                        {{ doc.date }}
+                      </time>
+                      <nav class="tag-cloud tags meta-column" tal:condition="item/subject | nothing">
+                        <a tal:repeat="subject item/subject" href="#" class="tag" tal:content="subject">Finanzplanung</a>
+                      </nav>
                     </div>
 
                   </label>
@@ -332,7 +332,6 @@ Supported types include (class names):
                               define="milestones ws_view/metromap_sequence | nothing;
                                       token context/@@authenticator/token;">
                 <tal:milestone repeat="milestone milestones">
-
                   <fieldset class="object-list tasks pat-checklist pat-collapsible" data-pat-collapsible="store: local"
                             tal:define="keep_open python:view.is_open_task_in_milestone(tasks[milestone])"
                             tal:attributes="id string:milestone-${milestone};
@@ -346,11 +345,19 @@ Supported types include (class names):
                                tal:attributes="value task/id;
                                                checked python:'checked' if task['checked'] else ''"
                                />
-
                         <a class="pat-inject"
                            data-pat-inject="source: #document-body; target: #document-body"
                            tal:attributes="title task/title; href task/url"
                            tal:content="task/title"/>
+                        <div class="additional-meta-data">
+                          <a href="/guido-stevens/" class="assignee meta-column" title="Assignee" i18n:attributes="title" tal:define="assignee task/assignee | nothing" tal:condition="task/assignee | nothing" tal:content="python:assignee" tal:attributes="href string:${here/portal_url}/author/${assignee}">
+                            Creator
+                          </a>
+                          <time class="due-date meta-column" tal:condition="task/due | nothing" title="Due Date" i18n:attributes="title" tal:content="python:task['due'].strftime('%d %B %Y')">
+                            {{ doc.date }}
+                          </time>
+                          <span class="meta-column" tal:condition="task/description | nothing" title="Description" tal:content="python:task['description']"/>
+                        </div>
                       </label>
                     </tal:task>
                     <p class="button-bar">
