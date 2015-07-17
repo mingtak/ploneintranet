@@ -47,7 +47,6 @@ class StatusUpdate(Persistent):
         self._init_creator()
         self._init_microblog_context(microblog_context)
         self._init_content_context(content)
-        self._init_microblog_context(microblog_context)
         self.tags = tags
 
         if thread_id:
@@ -87,7 +86,10 @@ class StatusUpdate(Persistent):
 
         We may want to catch a TypeError here...
         '''
-        self._content_context_uuid = self._context2uuid(content)
+        if content is not None:
+            self._content_context_uuid = self._context2uuid(content)
+        else:
+            self._content_context_uuid = None
 
     def _init_mentions(self, mention_ids):
         self.mentions = {}
