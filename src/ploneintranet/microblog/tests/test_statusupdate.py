@@ -56,7 +56,7 @@ class TestStatusUpdate(unittest.TestCase):
 
     def test_context_is_not_IMicroblogContext(self):
         mockcontext = object()
-        su = StatusUpdate('foo', context=mockcontext)
+        su = StatusUpdate('foo', microblog_context=mockcontext)
         self.assertIsNone(su._microblog_context_uuid)
 
     def test_status_update_with_content(self):
@@ -76,7 +76,7 @@ class TestStatusUpdate(unittest.TestCase):
 
         mockcontext = MockContext()
         uuid = repr(mockcontext)
-        su = StatusUpdate('foo', context=mockcontext)
+        su = StatusUpdate('foo', microblog_context=mockcontext)
         self.assertEqual(uuid, su._microblog_context_uuid)
 
     def test_context_acquisition_UUID(self):
@@ -93,7 +93,7 @@ class TestStatusUpdate(unittest.TestCase):
         b = MockMicroblogContext()
         wrapped = a.__of__(b)
         uuid = repr(b)
-        su = StatusUpdate('foo', context=wrapped)
+        su = StatusUpdate('foo', microblog_context=wrapped)
         self.assertEqual(uuid, su._microblog_context_uuid)
 
     def test_context_UUID_legacy(self):
@@ -111,7 +111,7 @@ class TestStatusUpdate(unittest.TestCase):
         class MockMicroblogContext(ExtensionClass.Base):
             implements(IMicroblogContext)
 
-        su = StatusUpdate('foo', context=MockMicroblogContext())
+        su = StatusUpdate('foo', microblog_context=MockMicroblogContext())
         self.assertEqual(su, su.getObject())
 
     def test_context_object_object(self):
@@ -127,7 +127,7 @@ class TestStatusUpdate(unittest.TestCase):
         a = MockContext()
         b = MockMicroblogContext()
         wrapped = a.__of__(b)
-        su = StatusUpdate('foo', context=wrapped)
+        su = StatusUpdate('foo', microblog_context=wrapped)
         self.assertEquals(a, su.getObject())
 
     def test_thread_id(self):
