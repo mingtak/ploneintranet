@@ -1,9 +1,11 @@
 from datetime import datetime
-from plone.app.dexterity.behaviors.metadata import IDublinCore
 from plone.app.event.base import default_timezone
 from plone.app.event.dx.behaviors import IEventBasic
 from ploneintranet.workspace.interfaces import IWorkspaceAppFormLayer
+from pytz import timezone
 from z3c.form.converter import BaseDataConverter
+from z3c.form.converter import DateDataConverter
+from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import IWidget
 from z3c.form.interfaces import NO_VALUE
@@ -14,8 +16,12 @@ from zope.component import adapter
 from zope.component import adapts
 from zope.interface import implementer
 from zope.interface import implementer_only
+from zope.schema.interfaces import IDate
 from zope.schema.interfaces import IDatetime
 from zope.schema.interfaces import ITuple
+
+from ploneintranet.network.behaviors.metadata import IDublinCore \
+    as pi_IDublinCore
 
 
 class ICommaSeparatedWidget(IWidget):
@@ -50,7 +56,8 @@ class CommaSeparatedConverter(BaseDataConverter):
         return value
 
 
-@adapter(getSpecification(IDublinCore['subjects']), IWorkspaceAppFormLayer)
+# plone intranet uses a dublincore override
+@adapter(getSpecification(pi_IDublinCore['subjects']), IWorkspaceAppFormLayer)
 @implementer(IFieldWidget)
 def CommaSeparatedFieldWidget(field, request):
     return FieldWidget(field, CommaSeparatedWidget(request))
@@ -82,8 +89,14 @@ class PatDatePickerWidget(Widget):
                 value[1] = u'0:00'
             time_str = "{0} {1}".format(*value)
             date = datetime.strptime(time_str, '%Y-%m-%d %H:%M')
-        date = date.replace(
-            tzinfo=default_timezone(self.context, as_tzinfo=True))
+        timezone_name = (
+            self.request.get('%s-timezone' % self.name, '')
+            or self.request.get('timezone', '')
+            or default_timezone(self.context)
+        )
+        if isinstance(timezone_name, unicode):
+            timezone_name.encode('utf8')
+        date = date.replace(tzinfo=timezone(timezone_name))
         return date
 
 
@@ -94,6 +107,18 @@ class PatDatePickerConverter(BaseDataConverter):
 
     def toFieldValue(self, value):
         return value
+
+
+@implementer(IDataConverter)
+class PatDatePickerDataConverter(DateDataConverter):
+    """A special data converter for dates."""
+    adapts(IDate, IPatDatePickerWidget)
+
+    def toFieldValue(self, value):
+        """See interfaces.IDataConverter"""
+        if isinstance(value, datetime):
+            return value
+        return super(PatDatePickerDataConverter).toFieldValue(value)
 
 
 @adapter(getSpecification(IEventBasic['start']), IWorkspaceAppFormLayer)
