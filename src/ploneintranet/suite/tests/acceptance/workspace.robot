@@ -56,12 +56,33 @@ Owner can delete sidebar events
 # for adding tasks in a workspace. Relying on globally available tasks (the
 # reason why these tests used to be passing) is not valid.
 
+Manager can add a task for Allan and Allan cannot modify it
+    Given I am in a workspace as a workspace admin
+     Then I can go to the sidebar tasks tile
+          Click Element  css=[title="Create new task"]
+          Wait Until Page Contains Element  css=.wizard-box
+          Input Text  css=.wizard-box input[name=title]  Ciao Allan
+          Input Text  css=.wizard-box textarea[name=description]  This is for you Allan
+          Click Element  css=.wizard-box .assignee .select2-choices input
+          Input Text  css=.wizard-box .assignee .select2-choices input  Allan
+          Wait Until Page Contains Element  jquery=span.select2-match:last
+          Click Element  jquery=span.select2-match:last
+          Input Text  css=.wizard-box input[name=due]  2020-12-31
+          Click Element  css=.wizard-box #form-buttons-create
+          Wait Until Page Contains Element  css=a[title="Ciao Allan"]
+     When I am logged in as the user allan_neece
+     Then I can go to the sidebar tasks tile
+          Wait Until Page Contains Element  css=a[title="Ciao Allan"]
+          Click Element  css=a[title="Ciao Allan"]
+          Wait Until Page Contains  This is for you Allan
+          Element Should Be Visible  jquery=input:disabled[name=due]
+
 # Manager can view sidebar tasks
 #     Given I am in a workspace as a workspace admin
 #     Then I can go to the sidebar tasks tile
 
 # Member can view sidebar tasks
-#     Given I am in a workspace as a workspace member
+#     Given I am in a workspace as a workspace memberf
 #      Then I can go to the sidebar tasks tile
 
 Traverse Folder in sidebar navigation
