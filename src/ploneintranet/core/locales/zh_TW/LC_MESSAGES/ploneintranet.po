@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../search/browser/templates/file_results.pt:14
 msgid "${results} items matched your search."
-msgstr ""
+msgstr "${results} 個項目符合您的搜尋條件"
 
 #: ../workspace/profiles/default/types/ploneintranet.workspace.workspacefolder.xml
 msgid "A Workspace users can collaborate in"
@@ -48,40 +48,40 @@ msgstr ""
 
 #: ../todo/behaviors.py:52
 msgid "A user (or a group) assigned to this task"
-msgstr ""
+msgstr "指派使用者(或群組)到這項工作"
 
 #: ../userprofile/content/userprofile.py:131
 msgid "A user with this username already exists"
-msgstr ""
+msgstr "已經存在的使用者名稱"
 
 #: ../messaging/browser/messaging.py:28
 msgid "Add a comment"
-msgstr ""
+msgstr "新增評論"
 
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:91
 msgid "Add group"
-msgstr ""
+msgstr "新增群組"
 
 #: ../workspace/browser/templates/panel-add-group.pt:13
 msgid "Add groups"
-msgstr ""
+msgstr "新增群組"
 
 #: ../todo/portlets/latest.py:75
 msgid "Add latest news portlet"
-msgstr ""
+msgstr "新增最新消息方框"
 
 #: ../messaging/browser/send-message.pt:53
 #: ../messaging/browser/your-inbox.pt:138
 msgid "Add tags"
-msgstr ""
+msgstr "新增標籤"
 
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:88
 msgid "Add user"
-msgstr ""
+msgstr "新增使用者"
 
 #: ../workspace/browser/templates/panel-add-user.pt:13
 msgid "Add users"
-msgstr ""
+msgstr "新增使用者"
 
 #: ../userprofile/content/userprofile.py:76
 msgid "Address"
@@ -95,26 +95,26 @@ msgstr ""
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:116
 #: ../workspace/browser/tiles/templates/sidebar.pt:462
 msgid "Advanced"
-msgstr ""
+msgstr "進階"
 
 #: ../workspace/browser/templates/roster-edit.pt:183
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:130
 msgid "Advanced permissions"
-msgstr ""
+msgstr "進階權限"
 
 #: ../search/browser/templates/all_results.pt:24
 #: ../search/browser/templates/search_template.pt:24
 #: ../workspace/browser/tiles/templates/navigation.pt:35
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #: ../workspace/browser/tiles/sidebar.py:381
 msgid "All Authors"
-msgstr ""
+msgstr "全部作者"
 
 #: ../workspace/browser/tiles/sidebar.py:377
 msgid "All Dates"
-msgstr ""
+msgstr "所有日期"
 
 #: ../workspace/browser/tiles/sidebar.py:385
 msgid "All Letters"
@@ -122,11 +122,11 @@ msgstr ""
 
 #: ../workspace/browser/tiles/sidebar.py:379
 msgid "All Tags"
-msgstr ""
+msgstr "所有標籤"
 
 #: ../workspace/browser/tiles/sidebar.py:618
 msgid "All Time"
-msgstr ""
+msgstr "所有時間"
 
 #: ../workspace/browser/tiles/sidebar.py:383
 msgid "All Types"
@@ -134,15 +134,15 @@ msgstr ""
 
 #: ../workspace/browser/templates/content_macros.pt:71
 msgid "All day event"
-msgstr ""
+msgstr "全日活動"
 
 #: ../notifications/browser/notifications.pt:43
 msgid "All notifications"
-msgstr ""
+msgstr "全部通知"
 
 #: ../library/browser/views.py:72
 msgid "All topics"
-msgstr ""
+msgstr "全部主題"
 
 #: ../layout/browser/templates/app-not-available.pt:25
 msgid "Alright"
@@ -172,16 +172,16 @@ msgstr ""
 #: ../messaging/browser/send-message.pt:41
 #: ../messaging/browser/your-inbox.pt:129
 msgid "Attach a file"
-msgstr ""
+msgstr "附加檔案"
 
 #: ../messaging/browser/send-message.pt:41
 #: ../messaging/browser/your-inbox.pt:129
 msgid "Attach a file (or create a picture)"
-msgstr ""
+msgstr "附加檔案(或建立圖片)"
 
 #: ../workspace/basecontent/templates/event_view.pt:42
 msgid "Attach documents"
-msgstr ""
+msgstr "附加文件"
 
 #: ../workspace/basecontent/templates/event_view.pt:42
 msgid "Attachments"
@@ -189,15 +189,15 @@ msgstr ""
 
 #: ../workspace/browser/tiles/sidebar.py:282
 msgid "Attributes changed."
-msgstr ""
+msgstr "屬性已變更"
 
 #: ../microblog/interfaces.py:17
 msgid "Author name (for display)"
-msgstr ""
+msgstr "作者名稱(用來顯示)"
 
 #: ../workspace/browser/tiles/templates/sidebar.pt:205
 msgid "Author of this document"
-msgstr ""
+msgstr "本文作者"
 
 #: ../userprofile/browser/templates/user_import_form.pt:39
 msgid "Available fields/columns"
@@ -223,7 +223,7 @@ msgstr ""
 #: ../workspace/basecontent/document.py:77
 #: ../workspace/browser/templates/add_content.pt:36
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: ../workspace/browser/templates/workspace-add.pt:31
 msgid "Case"
@@ -231,20 +231,20 @@ msgstr ""
 
 #: ../workspace/browser/templates/edit_folder.pt:7
 msgid "Change folder title and description"
-msgstr ""
+msgstr "變更目錄標題與描述"
 
 #: ../workspace/browser/templates/panel-change-role.pt:14
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:45
 msgid "Change role"
-msgstr ""
+msgstr "變更角色"
 
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:45
 msgid "Change role of member"
-msgstr ""
+msgstr "變更成員的角色"
 
 #: ../workspace/basecontent/templates/document_view.pt:41
 msgid "Change the workflow state"
-msgstr ""
+msgstr "變更工作流程的狀態"
 
 #: ../todo/browser/todo_view.py:70
 msgid "Changes applied"
@@ -252,7 +252,7 @@ msgstr ""
 
 #: ../workspace/browser/templates/content_macros.pt:130
 msgid "Confirmed"
-msgstr ""
+msgstr "已確認"
 
 #. Default: "row"
 #: ../userprofile/browser/user_import.py:123
@@ -265,7 +265,7 @@ msgstr ""
 
 #: ../userprofile/browser/templates/userprofile.pt:35
 msgid "Contact"
-msgstr ""
+msgstr "聯絡人"
 
 #: ../search/browser/templates/all_results.pt:27
 msgid "Content types"
@@ -274,56 +274,56 @@ msgstr ""
 #: ../workspace/basecontent/templates/document_view.pt:36
 #: ../workspace/browser/tiles/templates/sidebar.pt:96
 msgid "Copy"
-msgstr ""
+msgstr "複製"
 
 #: ../workspace/basecontent/templates/document_view.pt:36
 msgid "Copy this document"
-msgstr ""
+msgstr "複製這份文件"
 
 #: ../workspace/browser/templates/add_content.pt:33
 #: ../workspace/browser/templates/add_folder.pt:20
 #: ../workspace/browser/templates/add_task.pt:24
 msgid "Create"
-msgstr ""
+msgstr "建立"
 
 #: ../workspace/browser/templates/workspaces.pt:23
 msgid "Create a new workspace"
-msgstr ""
+msgstr "建立新的工作區域"
 
 #: ../workspace/browser/templates/add_content.pt:8
 #: ../workspace/browser/tiles/templates/sidebar.pt:52
 msgid "Create document"
-msgstr ""
+msgstr "建立文件"
 
 #: ../workspace/browser/templates/add_event.pt:2
 msgid "Create event"
-msgstr ""
+msgstr "建立活動"
 
 #: ../workspace/browser/templates/add_folder.pt:7
 #: ../workspace/browser/tiles/templates/sidebar.pt:226
 msgid "Create folder"
-msgstr ""
+msgstr "建立資料夾"
 
 #: ../workspace/browser/templates/add_task.pt:2
 msgid "Create task"
-msgstr ""
+msgstr "建立工作"
 
 #: ../workspace/browser/templates/workspace-add.pt:13
 #: ../workspace/browser/templates/workspaces.pt:23
 msgid "Create workspace"
-msgstr ""
+msgstr "建立工作區域"
 
 #: ../microblog/interfaces.py:19
 msgid "Creation date"
-msgstr ""
+msgstr "建立日期"
 
 #: ../workspace/browser/tiles/templates/sidebar.pt:88
 msgid "Cut"
-msgstr ""
+msgstr "剪下"
 
 #: ../workspace/browser/tiles/templates/sidebar.pt:208
 msgid "Date and time of the latest modification"
-msgstr ""
+msgstr "最後修改的日期/時間"
 
 #: ../workspace/browser/templates/content_macros.pt:132
 msgid "Declined"
@@ -337,23 +337,23 @@ msgstr ""
 #: ../workspace/basecontent/templates/event_view.pt:39
 #: ../workspace/browser/tiles/templates/sidebar.pt:114
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #: ../workspace/basecontent/templates/document_view.pt:35
 msgid "Delete this document"
-msgstr ""
+msgstr "刪除這件文件"
 
 #: ../workspace/basecontent/templates/event_view.pt:39
 msgid "Delete this event"
-msgstr ""
+msgstr "刪除這個活動"
 
 #: ../userprofile/content/userprofile.py:64
 msgid "Department"
-msgstr ""
+msgstr "部門"
 
 #: ../workspace/browser/templates/content_macros.pt:10
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: ../workspace/browser/templates/add_content.pt:27
 #: ../workspace/browser/templates/add_folder.pt:15
@@ -372,11 +372,11 @@ msgstr ""
 
 #: ../workspace/browser/templates/add_content.pt:25
 msgid "Document title"
-msgstr ""
+msgstr "文件標題"
 
 #: ../workspace/browser/tiles/templates/workspace-tabs-tile.pt:18
 msgid "Documents"
-msgstr ""
+msgstr "文件"
 
 #: ../todo/behaviors.py:63
 #: ../workspace/browser/templates/content_macros.pt:27
@@ -385,15 +385,15 @@ msgstr ""
 
 #: ../workspace/browser/templates/edit_folder.pt:19
 msgid "Edit"
-msgstr ""
+msgstr "編輯"
 
 #: ../todo/portlets/latest.py:87
 msgid "Edit latest news portlet"
-msgstr ""
+msgstr "編輯最新消息方框"
 
 #: ../workspace/browser/tiles/templates/sidebar.pt:151
 msgid "Edit name/description"
-msgstr ""
+msgstr "編輯姓名/描述"
 
 #: ../userprofile/browser/templates/userprofile.pt:106
 msgid "Edit profile"
@@ -401,15 +401,15 @@ msgstr ""
 
 #: ../userprofile/content/userprofile.py:45
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: ../workspace/browser/templates/content_macros.pt:10
 msgid "Enter a description of the task"
-msgstr ""
+msgstr "輸入工作的描述"
 
 #: ../workspace/browser/tiles/templates/workspace-tabs-tile.pt:20
 msgid "Events"
-msgstr ""
+msgstr "活動"
 
 #: ../workspace/browser/tiles/templates/sidebar-settings-members.pt:24
 msgid "Expand sidebar"
@@ -425,7 +425,7 @@ msgstr ""
 
 #: ../search/browser/templates/search_template.pt:30
 msgid "Files"
-msgstr ""
+msgstr "檔案"
 
 #: ../userprofile/content/userprofile.py:35
 msgid "First name"
@@ -433,7 +433,7 @@ msgstr ""
 
 #: ../workspace/browser/templates/add_folder.pt:14
 msgid "Folder name"
-msgstr ""
+msgstr "目錄名稱"
 
 #: ../network/browser/follows.py:40
 msgid "Follow"
